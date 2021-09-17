@@ -1,9 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from app import app
-
-directory_db = '/tmp/pokemon.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{directory_db}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from config import *
 
 db = SQLAlchemy(app)
 
@@ -26,3 +22,22 @@ class Pokemon(db.Model):
 
     def __repr__(self):
         return '<Pokemon %r>' % self.name
+
+    @property
+    def serialize(self):
+       """Return object data in easily serializable format"""
+       return {
+            'id': self.id,
+            'name': self.name,
+            'type1': self.type1,
+            'type2': self. type2,
+            'total': self.total,
+            'hp': self.hp,
+            'attack': self.attack,
+            'defense': self.defense,
+            'sp_attack': self.sp_attack,
+            'sp_defense': self.sp_defense,
+            'speed': self.speed,
+            'generation': self.generation,
+            'legendary': self.legendary
+       }
