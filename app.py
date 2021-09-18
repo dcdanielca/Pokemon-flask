@@ -1,14 +1,12 @@
 from models import Pokemon, User, db
 from flask import jsonify, request, abort
 from sqlalchemy import text
-from extras import search_numeric
+from extras import search_numeric, auth
 from config import app, SORT_FIELDS, NUMERIC_FIELDS
-from flask_httpauth import HTTPBasicAuth
 import json
 
 
 db.init_app(app)
-auth = HTTPBasicAuth()
 
 @app.route("/pokemon")
 @auth.login_required
@@ -64,12 +62,7 @@ def pokemon():
 
     return jsonify({"pokemons" : [pokemon.serialize for pokemon in query.limit(20)]})
 
-@auth.verify_password
-def verify_password(username, password):
-    user =  User.query.filter_by(username = username).first()
-    if not user or not user.verify_password(password):
-        return False
-    return True
+
 
 @app.route('/user/register', methods = ['POST'])
 def new_user():
