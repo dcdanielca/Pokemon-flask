@@ -1,7 +1,8 @@
+from flask.app import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import *
+from flask import Flask
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 class Pokemon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
