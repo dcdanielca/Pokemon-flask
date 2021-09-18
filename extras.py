@@ -1,5 +1,3 @@
-from sqlalchemy  import and_
-
 def search_numeric(column, operators, query):
     filter_list = []
     if "eq" in operators:

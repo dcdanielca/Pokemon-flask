@@ -1,14 +1,17 @@
-from models import Pokemon, db
-from flask import jsonify, request
+from models import Pokemon, User, db
+from flask import jsonify, request, abort
 from sqlalchemy import text
 from extras import search_numeric
 from config import app, SORT_FIELDS, NUMERIC_FIELDS
+from flask_httpauth import HTTPBasicAuth
 import json
 
 
 db.init_app(app)
+auth = HTTPBasicAuth()
 
 @app.route("/pokemon")
+@auth.login_required
 def pokemon():
     params = request.args
     query = Pokemon.query
@@ -61,5 +64,23 @@ def pokemon():
 
     return jsonify({"pokemons" : [pokemon.serialize for pokemon in query.limit(20)]})
 
-if __name__ == '__main__':
-    app.run()
+@auth.verify_password
+def verify_password(username, password):
+    user =  User.query.filter_by(username = username).first()
+    if not user or not user.verify_password(password):
+        return False
+    return True
+
+@app.route('/user/register', methods = ['POST'])
+def new_user():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if username is None or password is None:
+        abort(400) 
+    if User.query.filter_by(username = username).first() is not None:
+        abort(400)
+    user = User(username = username)
+    user.hash_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({ 'username': user.username }), 201
