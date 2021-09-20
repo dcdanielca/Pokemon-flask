@@ -1,9 +1,8 @@
-from flask.app import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 from passlib.apps import custom_app_context as pwd_context
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 class Pokemon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,16 +18,14 @@ class Pokemon(db.Model):
     speed = db.Column(db.Integer)
     generation = db.Column(db.Integer)
     legendary = db.Column(db.Boolean, default=False)
-    
-
 
     def __repr__(self):
         return '<Pokemon %r>' % self.name
 
     @property
     def serialize(self):
-       """Return object data in easily serializable format"""
-       return {
+        """Return object data in easily serializable format"""
+        return {
             'id': self.id,
             'name': self.name,
             'type1': self.type1,
@@ -42,12 +39,12 @@ class Pokemon(db.Model):
             'speed': self.speed,
             'generation': self.generation,
             'legendary': self.legendary
-       }
+        }
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(32), index = True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(128))
 
     def hash_password(self, password):

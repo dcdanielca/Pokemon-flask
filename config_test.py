@@ -1,7 +1,7 @@
 # DATABASE SETTINGS
-PATH_DB = '/tmp/pokemon.db'
+PATH_DB = '/tmp/pokemon_test.db'
 
-# SQLALCHEMY
+# SQLAlCHEMY
 
 DEBUG = True
 PORT = 5000
